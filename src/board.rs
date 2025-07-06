@@ -29,7 +29,7 @@ impl IndexMut<&Coord> for Board {
 }
 
 impl Board {
-	pub fn new() -> (Self, Vec<CommonBeast>) {
+	pub fn new(level: &Level) -> (Self, Vec<CommonBeast>) {
 		let mut buffer = [[Tile::Empty; BOARD_WIDTH]; BOARD_HEIGHT];
 
 		let mut all_coords = (0..BOARD_HEIGHT)
@@ -45,7 +45,7 @@ impl Board {
 			block_count,
 			static_block_count,
 			common_beast_count,
-		} = Level::One.get_level_config();
+		} = level.get_level_config();
 
 		for _ in 0..block_count {
 			let coord = all_coords.pop().expect(

@@ -33,7 +33,7 @@ pub enum Direction {
 	Left,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Coord {
 	column: usize,
 	row: usize,

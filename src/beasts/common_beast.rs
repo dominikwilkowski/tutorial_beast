@@ -235,8 +235,8 @@ impl Beast for CommonBeast {
 		.flatten()
 		.collect::<Vec<Coord>>();
 
-		possible_moves
-			.into_iter()
-			.find(|&next_move| board[&next_move] == Tile::Empty)
+		possible_moves.into_iter().find(|&next_move| {
+			matches!(board[&next_move], Tile::Empty | Tile::Player)
+		})
 	}
 }
