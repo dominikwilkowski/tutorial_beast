@@ -2,7 +2,7 @@ use crate::{BOARD_HEIGHT, BOARD_WIDTH, Coord, Direction, Tile, board::Board};
 
 #[derive(Debug)]
 pub struct Player {
-	position: Coord,
+	pub position: Coord,
 }
 
 impl Player {
@@ -80,7 +80,7 @@ impl Player {
 									board[&first_position] = Tile::Player;
 									board[&current_position] = Tile::Block;
 								},
-								Tile::StaticBlock | Tile::Player => break,
+								Tile::StaticBlock | Tile::Player | Tile::CommonBeast => break,
 							}
 						} else {
 							break;
@@ -88,6 +88,9 @@ impl Player {
 					}
 				},
 				Tile::Player | Tile::StaticBlock => {},
+				Tile::CommonBeast => {
+					todo!("The player ran into a beast and died");
+				},
 			}
 		}
 	}

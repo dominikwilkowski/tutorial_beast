@@ -1,3 +1,4 @@
+mod beasts;
 mod board;
 mod game;
 mod level;
@@ -13,14 +14,16 @@ pub const TILE_SIZE: usize = 2;
 pub const ANSI_YELLOW: &str = "\x1B[33m";
 pub const ANSI_GREEN: &str = "\x1B[32m";
 pub const ANSI_CYAN: &str = "\x1B[36m";
+pub const ANSI_RED: &str = "\x1b[31m";
 pub const ANSI_RESET: &str = "\x1B[39m";
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Tile {
-	Empty,       // There will be empty spaces on our board "  "
-	Player,      // We will need the player "◀▶"
-	Block,       // Some tiles will be blocks "░░"
-	StaticBlock, // Others will be blocks that can't be moved "▓▓"
+	Empty,
+	Player,
+	Block,
+	StaticBlock,
+	CommonBeast,
 }
 
 pub enum Direction {

@@ -1,6 +1,7 @@
 pub struct LevelConfig {
 	pub block_count: usize,
 	pub static_block_count: usize,
+	pub common_beast_count: usize,
 }
 
 #[derive(Debug)]
@@ -26,14 +27,17 @@ impl Level {
 			Level::One => LevelConfig {
 				block_count: 30,
 				static_block_count: 5,
+				common_beast_count: 3,
 			},
 			Level::Two => LevelConfig {
 				block_count: 20,
 				static_block_count: 10,
+				common_beast_count: 5,
 			},
 			Level::Three => LevelConfig {
 				block_count: 12,
 				static_block_count: 20,
+				common_beast_count: 15,
 			},
 		}
 	}
