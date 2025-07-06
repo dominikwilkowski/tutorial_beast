@@ -1,41 +1,94 @@
-use crate::{BOARD_HEIGHT, BOARD_WIDTH, Direction, Tile, board::Board};
+use crate::{BOARD_HEIGHT, BOARD_WIDTH, Coord, Direction, Tile, board::Board};
 
 #[derive(Debug)]
 pub struct Player {
-	position: (usize, usize),
+	position: Coord,
 }
 
 impl Player {
 	pub fn new() -> Self {
-		Self { position: (0, 0) }
+		Self {
+			position: Coord { column: 0, row: 0 },
+		}
 	}
 
-	pub fn advance(&mut self, board: &mut Board, direction: Direction) {
-		board.buffer[self.position.1][self.position.0] = Tile::Empty;
-
+	fn get_next_position(
+		position: Coord,
+		direction: &Direction,
+	) -> Option<Coord> {
+		let mut next_position = position;
 		match direction {
 			Direction::Up => {
-				if self.position.1 > 0 {
-					self.position.1 -= 1
+				if next_position.row > 0 {
+					next_position.row -= 1
+				} else {
+					return None;
 				}
 			},
 			Direction::Right => {
-				if self.position.0 < BOARD_WIDTH - 1 {
-					self.position.0 += 1
+				if next_position.column < BOARD_WIDTH - 1 {
+					next_position.column += 1
+				} else {
+					return None;
 				}
 			},
 			Direction::Down => {
-				if self.position.1 < BOARD_HEIGHT - 1 {
-					self.position.1 += 1
+				if next_position.row < BOARD_HEIGHT - 1 {
+					next_position.row += 1
+				} else {
+					return None;
 				}
 			},
 			Direction::Left => {
-				if self.position.0 > 0 {
-					self.position.0 -= 1
+				if next_position.column > 0 {
+					next_position.column -= 1
+				} else {
+					return None;
 				}
 			},
 		}
 
-		board.buffer[self.position.1][self.position.0] = Tile::Player;
+		Some(next_position)
+	}
+
+	pub fn advance(&mut self, board: &mut Board, direction: &Direction) {
+		if let Some(first_position) =
+			Self::get_next_position(self.position, direction)
+		{
+			match board[&first_position] {
+				Tile::Empty => {
+					board[&self.position] = Tile::Empty;
+					self.position = first_position;
+					board[&first_position] = Tile::Player;
+				},
+				Tile::Block => {
+					let mut current_tile = Tile::Block;
+					let mut current_position = first_position;
+
+					while current_tile == Tile::Block {
+						if let Some(next_position) =
+							Self::get_next_position(current_position, direction)
+						{
+							current_position = next_position;
+							current_tile = board[&current_position];
+
+							match current_tile {
+								Tile::Block => { /* continue looking */ },
+								Tile::Empty => {
+									board[&self.position] = Tile::Empty;
+									self.position = first_position;
+									board[&first_position] = Tile::Player;
+									board[&current_position] = Tile::Block;
+								},
+								Tile::StaticBlock | Tile::Player => break,
+							}
+						} else {
+							break;
+						}
+					}
+				},
+				Tile::Player | Tile::StaticBlock => {},
+			}
+		}
 	}
 }
